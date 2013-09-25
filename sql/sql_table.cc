@@ -6641,8 +6641,11 @@ copy_table:
     DEBUG_SYNC(thd, "alter_table_manage_keys");
     alter_table_manage_keys(table, table->file->indexes_are_disabled(),
                             alter_info->keys_onoff);
-    error= mysql_update_frm_table(table, new_db, tmp_name);
-    assert(error == 0);
+    if (!new_table) 
+    {
+      error= mysql_update_frm_table(table, new_db, tmp_name);
+      assert(error == 0);
+    }
     error= trans_commit_stmt(thd);
     if (trans_commit_implicit(thd))
       error= 1;
